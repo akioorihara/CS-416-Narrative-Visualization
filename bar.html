@@ -1,38 +1,18 @@
 <!DOCTYPE html>
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <head>
-    <style type="text/css">
-        svg {
-          font: 15px sans-serif;
-          shape-rendering: crispEdges;
-        }
-      
-        .axis path,
-        .axis line {
-          fill: none;
-          stroke: #000;
-        }
-       
-        path.domain {
-          stroke: none;
-        }
-       
-        .y .tick line {
-          stroke: #ddd;
-        }
-        .chart rect { 
-            fill: steelblue 
-        }
-      
-        </style>
+
 </head>
 <html><body>
 <p>Here are the magic numbers from Lost: <span id="data"></span></p>
+<p>
+    <a href="index.html">Home</a>
+</p>
 
 <svg class="chart"></svg>
 
 <script>
-var margin = 30;
+var margin = 50;
 var width = 120;
 var height = 300;
 
