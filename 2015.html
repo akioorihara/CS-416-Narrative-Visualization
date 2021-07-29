@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+.bar {
+  fill: steelblue;
+}
+
+.bar:hover {
+  fill: brown;
+}
+
+.axis--x path {
+  display: none;
+}
+
+</style>
+<svg width="960" height="700"></svg>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script>
+
+var svg = d3.select("svg"),
+    // smaller margin is the more height in texts 
+    margin = {top: 20, right: 20, bottom: 100, left: 40},  
+    width = +svg.attr("width") - margin.left - margin.right,
+    height = +svg.attr("height") - margin.top - margin.bottom;
+
+  
+
+var g = svg.append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+d3.csv("pop.csv", function(error, data) {
+    if (error) throw error;
+
+    // console.log("beginnig");
+    // console.log(d3.extent(data,d => d.y2010));
+
+/////////////////////////////////////////////////////////
+data.forEach(function(d) {
+   d.y2010 = + d.y2015;
+   console.log(d.y2015);
+});
+
+var max = d3.max(data, function(d) { return d.y2015; });
+console.log("the max volume is:" + max)
+
+    var x = d3.scaleBand().rangeRound([0, width]).padding(0.3),
+    y = d3.scaleLinear().rangeRound([height, 0]);
+    
+    // y = d3.scaleBand()
+    // .domain(d3.extent(data,d => d.y2010))
+    // .rangeRound(0,max);
+
+  
+
+  x.domain(data.map(function(d) { return d.Location; }));
+  y.domain([0, d3.max(data, function(d) { return d.y2010; })]);
+
+
+
+  //X Axis 
+  g.append("g")
+      .attr("class", "axis axis--x")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x))
+    .selectAll("text")
+      .attr("x", 20)
+      .attr("transform", "rotate(45)");
+  
+  console.log("we made it");
+ //Y Axis 
+  g.append("g")
+      // .attr("class", "axis axis--y")
+      .attr("transform", "translate(0, 0)")
+      .call(d3.axisLeft(y))
+      // .append("text")    
+      // .attr("transform", "rotate(-90)")
+      // .attr("y", 6)
+      // .attr("dy", "0.71em")
+      // .attr("text-anchor", "end")
+      // .text("Frequency")
+     
+  console.log("we made it, but not till bar");
+  g.selectAll(".bar")
+    .data(data)
+    .enter().append("rect")
+      .attr("class", "bar")
+      .attr("x", function(d) { return x(d.Location); })
+      .attr("y", function(d) { return y(d.y2015); })
+      .attr("width", x.bandwidth())
+      .attr("height", function(d) { return height - y(d.y2015); });
+      // .attr("height", function(d) { return height - y(d.y2010); });
+});
+
+</script>
