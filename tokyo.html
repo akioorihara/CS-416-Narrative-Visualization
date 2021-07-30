@@ -28,20 +28,39 @@
   var g = svg.append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-  d3.csv("pop.csv", function (error, data) {
+  d3.csv("pop3.csv", function (error, data) {
     if (error) throw error;
 
     // data.forEach(function (x) {
     //   if (x[Location] == "Tokyo")
-    //   console.log(x.y2020);
+
+    var example_array = [ // <-A
+      { Location: "Tokyo", y2010: 13159, y2015: 13515, y2020: 13921 },
+      { Location: "Chicago", y2010: 13159, y2015: 13515, y2020: 13921 },
+
+    ];
+
+    console.log(example_array);
+    console.log(example_array[1].Location);
+    console.log(data[8].y2015);
+    console.log(data[8].y2020);
     // });
 
+    // if(data[Location] = "Tokyo"){
+    //   console.log(data['y2015'][1]);
+    //   console.log(data[Location][1]);
+    //   console.log(data[Location][2]);
+    // }
+
+    // console.log(data[Location] = "Tokyo");
+    // console.log(x[Location])
+
     data.forEach(function (d) {
-      if (d[Location] = "Tokyo") {
-        d.y2020 = + d.y2020;
-        console.log("Yes Tokyo is here");
-      }
-    });
+      // if (d[Location] = "Tokyo") {
+      d.y2020 = + d.y2020;
+      // console.log("Yes Tokyo is here");
+    }
+    );
 
 
     var max = d3.max(data, function (d) { return d.y2020; });
@@ -57,7 +76,7 @@
 
     //X Axis 
     g.append("g")
-      .attr("class", "axis axis--x")
+      // .attr("class", "axis axis--x")
       .attr("transform", "translate(0," + height + ")")
       .call(d3.axisBottom(x))
       .selectAll("text")
@@ -70,18 +89,28 @@
       .call(d3.axisLeft(y))
 
 
-    // g.selectAll(".bar")
+    //2020
     g.selectAll(".bar")
-      .data(data)
+      .data(example_array)
       .enter().append("rect")
       .attr("class", "bar")
-      // .attr("x", function (d) { return x(d.Location); })
-      .attr("x", function (d) { return x(d.Location); })
-      // .attr("y", function (d) { return y(d.y2020); })
-      .attr("y", function (d) { return y(d.y2020); })
-      .attr("width", x.bandwidth())
-      .attr("height", function (d) { return height - y(d.y2020); });
+      .attr("x", function (d) { return xScale(d.Location); })
+      .attr("y", function (d) { return yScale(d.y2010); })
+      .attr("width", xScale.bandwidth())
+      .attr("height", function (d) { return height - yScale(d.y2010); });
 
+    //2015
+    // g.selectAll(".bar")
+    //   .data(data.filter(function (d) { return d.Location = "Tokyo" }))
+    //   .enter()
+    //   .append("rect")
+    //   .attr("class", "bar")
+    //   // .attr("x", function (d) { return x(d.Location); })
+    //   .attr("x", function (d) { return x(d.Location); })
+    //   // .attr("y", function (d) { return y(d.y2020); })
+    //   .attr("y", function (d) { return y(d.y2015); })
+    //   .attr("width", x.bandwidth())
+    //   .attr("height", function (d) { return height - y(d.y2015); });
 
     //Mouse over 
     // function onMouseOver(d, i) {

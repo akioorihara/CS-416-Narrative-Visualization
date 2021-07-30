@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<style>
+    .h-bar {
+        min-height: 15px;
+        min-width: 10px;
+        width: 0px;
+        height: 0px;
+        background-color: steelblue;
+        margin-bottom: 2px;
+        font-size: 11px;
+        color: #f0f8ff;
+        text-align: right;
+        padding-right: 2px;
+    }
+
+    .control-group {
+        padding-top: 10px;
+        margin: 10px;
+    }
+
+    .selected {
+        background-color: #f08080;
+    }
+</style>
+
+<head>
+    <meta charset="utf-8">
+    <title>Data Filter</title>
+
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script> -->
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+
+</head>
+
+<body>
+    <svg width="960" height="500"></svg>
+    <script type="text/javascript">
+        var data = [ // <-A
+            { expense: 10, category: "Retail" },
+            { expense: 15, category: "Gas" },
+            { expense: 30, category: "Retail" },
+            { expense: 50, category: "Dining" },
+            { expense: 80, category: "Gas" },
+            { expense: 65, category: "Retail" },
+            { expense: 55, category: "Gas" },
+            { expense: 30, category: "Dining" },
+            { expense: 20, category: "Retail" },
+            { expense: 10, category: "Dining" },
+            { expense: 8, category: "Gas" }
+        ];
+        // console.log(data);
+
+        var data1;
+        d3.csv("pop3.csv", function (error, data2) {
+            if (error) {
+                throw error;
+            }
+            data1 = data2;
+            // console.log(data2);
+            // d.y2010 =+ d.y2010;
+            // return d; 
+        });
+        // console.log(data1);
+
+        var svg = d3.select("svg"),
+            margin = { top: 20, right: 20, bottom: 30, left: 40 },
+            width = +svg.attr("width") - margin.left - margin.right,
+            height = +svg.attr("height") - margin.top - margin.bottom;
+
+        // var x = d3.scaleBand().rangeRound([0, width]).padding(0.1),
+        //     y = d3.scaleLinear().rangeRound([height, 0]);
+
+        // var g = svg.append("g")
+        // .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+        // console.log(typeof(data1.Location="Tokyo"));
+        function render(data, category) {
+            console.log(category);
+            d3.select("body").selectAll("div.h-bar") // <-B
+                .data(data.filter(function (d) { return d.category == category; }))
+                .enter()
+                .append("div")
+                .attr("class", "h-bar")
+                .append("span");
+
+
+            d3.select("body").selectAll("div.h-bar") // <-D
+                .data(data.filter(function (d) { return d.y2015 == category; }))
+                .attr("class", "h-bar")
+                .style("width", function (d) {
+                    return (d.expense * 5) + "px";
+                }
+                )
+                .select("span")
+                .text(function (d) {
+                    return d.category;
+                });
+
+
+            d3.select("body").selectAll("div.h-bar") // <-C
+                .data(data.filter(function (d) { return d.y2015 == category; }))
+                .exit().remove();
+
+        }
+
+        function select(category) {
+            console.log(category);
+            render(data1, category);
+
+        }
+        // });
+        //
+    </script>
+
+    <div class="control-group">
+        <button onclick="select('y2010')">
+            2010
+        </button>
+        <button onclick="select('y2015')">
+            2015
+        </button>
+        <button onclick="select('y2020')">
+            Dining
+        </button>
+        <button onclick="select()">
+            Clear
+        </button>
+    </div>
+
+</body>
+
+</html>

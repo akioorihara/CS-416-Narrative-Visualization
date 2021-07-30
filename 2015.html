@@ -43,7 +43,7 @@ data.forEach(function(d) {
 });
 
 var max = d3.max(data, function(d) { return d.y2015; });
-console.log("the max volume is:" + max)
+// console.log("the max volume is:" + max)
 
     var x = d3.scaleBand().rangeRound([0, width]).padding(0.3),
     y = d3.scaleLinear().rangeRound([height, 0]);
@@ -81,7 +81,7 @@ console.log("the max volume is:" + max)
       // .attr("text-anchor", "end")
       // .text("Frequency")
      
-  console.log("we made it, but not till bar");
+  // console.log("we made it, but not till bar");
   g.selectAll(".bar")
     .data(data)
     .enter().append("rect")
