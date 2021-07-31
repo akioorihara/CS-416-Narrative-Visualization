@@ -22,7 +22,7 @@
     <button type="button" onclick="window.location='2020.html';">2020</button>
     <button type="button" onclick="window.location='tokyo.html';">Tokyo</button>
     <button type="button" onclick="window.location='osaka.html';">Osaka</button>
-</div>
+  </div>
   <svg width="960" height="700"></svg>
 
 
@@ -30,7 +30,7 @@
 
     var svg = d3.select("svg")
     // smaller margin is the more height in texts 
-    var margin = 70;
+    var margin = 100;
     var width = 120;
     var height = 300;
 
@@ -39,6 +39,8 @@
 
     //tooltip 
     var tooltip = d3.select("body").append("div").attr("class", "toolTip");
+
+
 
     d3.csv("csv/tokyo.csv", function (error, data) {
       // if (error) throw error;
@@ -55,8 +57,10 @@
         y = d3.scaleLinear().rangeRound([height, 0]);
 
 
+
       x.domain(data.map(function (d) { return d.year; }));
       y.domain([0, d3.max(data, function (d) { return d.population; })]);
+
 
       const xValue = d => d.population;
 
@@ -68,6 +72,14 @@
       // .attr("x", 20);
       // .attr("transform", "rotate(45)");
 
+      //X axis Label
+      g.append("text")
+        .attr("transform",
+          "translate(" + (width / 2) + " ," +
+          (height + margin - 55) + ")")
+        .style("text-anchor", "middle")
+        .text("Year");
+
       //Y Axis 
       g.append("g")
         .attr("transform", "translate(0, 0)")
@@ -75,6 +87,14 @@
       // .tickSize(-innerHeight);
       //  .tickFormat(format('g'))
 
+      //Y axis Lebel
+      svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - margin.left)
+        .attr("x", 0 - (height / 1.5))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text("Populations");
 
       //bar chart
       g.selectAll(".bar")
@@ -112,8 +132,8 @@
             title: "Max Population",
             label: "The population in Tokyo seems to grow upwards"
           },
-          x: 180,
-          y: 70,
+          x: 200,
+          y: 105,
           dy: 100,
           dx: 100
         }
