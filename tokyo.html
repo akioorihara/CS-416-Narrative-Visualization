@@ -64,10 +64,10 @@
     //X Axis 
     g.append("g")
       .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x))
-      .selectAll("text")
-      .attr("x", 20)
-      .attr("transform", "rotate(45)");
+      .call(d3.axisBottom(x));
+      // .selectAll("text");
+      // .attr("x", 20);
+      // .attr("transform", "rotate(45)");
 
     //Y Axis 
     g.append("g")
