@@ -52,7 +52,7 @@
         // console.log(data);
 
         var data1;
-        d3.csv("pop3.csv", function (error, data2) {
+        d3.csv("pop3.csv", function (error, data2, setTimeout(function(){ alert("Hello"); }, 3000)) {
             if (error) {
                 throw error;
             }
