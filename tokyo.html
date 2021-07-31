@@ -12,6 +12,17 @@
   .axis--x path {
     display: none;
   }
+
+  .toolTip {
+    position: absolute;
+    display: none;
+    min-width: 80px;
+    height: auto;
+    background: none repeat scroll 0 0 #ffffff;
+    border: 1px solid #6F257F;
+    padding: 14px;
+    text-align: center;
+  }
 </style>
 <svg width="960" height="700"></svg>
 <script src="https://d3js.org/d3.v4.min.js"></script>
@@ -73,7 +84,7 @@
       .attr("y", function (d) { return y(d.population); })
       .attr("width", x.bandwidth())
       .attr("height", function (d) { return height - y(0); })
-      .attr("y", function(d){return y(0);});
+      .attr("y", function (d) { return y(0); });
 
     //Animation 
     g.selectAll("rect")
@@ -81,7 +92,23 @@
       .duration(1000)
       .attr("y", function (d) { return y(d.population); })
       .attr("height", function (d) { return height - y(d.population); })
-      .delay(function (d, i) { console.log(i); return (i * 100) });
+      .delay(function (d, i) { console.log(i); return (i * 100) })
+  
+  
+      // .on("mousemove", function (d) {
+      //   tooltip
+      //     .style("left", d3.event.pageX - 50 + "px")
+      //     .style("top", d3.event.pageY - 70 + "px")
+      //     .style("display", "inline-block")
+      //     .html((d.year) + "<br>" + (d.population));
+      // })
+      // .on("mouseout", function (d) { 
+      //   tooltip.style("display", "none"); 
+      //   d3.select(this).transition().attr('fill', staticColor);
+      // });
+
+
+    ;
 
 
     const annotations = [
