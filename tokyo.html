@@ -6,7 +6,7 @@
   }
 
   .bar:hover {
-    fill: brown;
+    fill: rgb(180, 138, 21);
   }
 
   .axis--x path {
@@ -15,6 +15,7 @@
 </style>
 <svg width="960" height="700"></svg>
 <script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-annotation/2.3.1/d3-annotation.min.js"></script>
 <script>
 
   var svg = d3.select("svg")
@@ -31,7 +32,7 @@
     // if (error) throw error;
     // console.log(data);
     data.forEach(d => {
-      d.population = +d.population;
+      d.population = +d.population * 1000;
 
     });
 
@@ -58,7 +59,10 @@
     //Y Axis 
     g.append("g")
       .attr("transform", "translate(0, 0)")
-      .call(d3.axisLeft(y))
+      .call(d3.axisLeft(y));
+      // .tickSize(-innerHeight);
+    //  .tickFormat(format('g'))
+
 
 
     //2020
@@ -71,41 +75,29 @@
       .attr("width", x.bandwidth())
       .attr("height", function (d) { return height - y(d.population); });
 
-    //2015
-    // g.selectAll(".bar")
-    //   .data(data.filter(function (d) { return d.Location = "Tokyo" }))
-    //   .enter()
-    //   .append("rect")
-    //   .attr("class", "bar")
-    //   // .attr("x", function (d) { return x(d.Location); })
-    //   .attr("x", function (d) { return x(d.Location); })
-    //   // .attr("y", function (d) { return y(d.y2020); })
-    //   .attr("y", function (d) { return y(d.y2015); })
-    //   .attr("width", x.bandwidth())
-    //   .attr("height", function (d) { return height - y(d.y2015); });
-
-    //Mouse over 
-    // function onMouseOver(d, i) {
-    //   // d3.select(this).attr('class', 'highlight');
-    //   d3.select(".bar")
-    //     .transition()
-    //     .duration(100)
-    //     .attr('width', x.bandwidth() + 5)
-    //     .attr("y", function (d) {
-    //       return y(d.y2020) - 10;
-    //     })
-    //     .attr("height", function (d) {
-    //       return height - y(d.y2020) + 10;
-    //     });
-
-    //   svg1.append('text')
-    //     .attr('id', 'val' + i)
-    //     .attr('x', x(d.y2020) + 80)
-    //     .attr('y', y(d.y2020) + 80)
-    //     .text(d.y2020);
-    // }
+    const annotations = [
+      {
+        note: {
+          title: "Max Population",
+          label: "population in Tokyo seems to grow upwards"
+        },
+        x: 180,
+        y: 70,
+        dy: 100,
+        dx: 100
+      }
+    ]
+    // Add annotation to the chart
+    const makeAnnotations = d3.annotation().annotations(annotations);
+    d3.select("svg")
+      .append("g")
+      .call(makeAnnotations)
 
 
+
+    g.append("text")
+      .attr("y", -20)
+      .text("Tokyo Population from 2010 -2020");
   });
 
 </script>
