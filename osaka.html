@@ -1,136 +1,128 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
-<style>
-    .bar {
-        fill: steelblue;
-    }
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-annotation/2.3.1/d3-annotation.min.js"></script>
 
-    .bar:hover {
-        fill: rgb(180, 138, 21);
-    }
+</head>
 
-    .axis--x path {
-        display: none;
-    }
+<body>
+    <nav class="navbar navbar-light bg-light">
+        <div class="container"></div>
+        <h1>Population in Japan Between 2010 to 2020 </h1>
+        </div>
+    </nav>
+    <div class="move">
+        <button type="button" onclick="window.location='index.html';">Home</button>
+        <button type="button" onclick="window.location='2010.html';">2010</button>
+        <button type="button" onclick="window.location='2015.html';">2015</button>
+        <button type="button" onclick="window.location='2020.html';">2020</button>
+        <button type="button" onclick="window.location='tokyo.html';">Tokyo</button>
+        <button type="button" onclick="window.location='osaka.html';">Osaka</button>
+    </div>
+    <svg width="960" height="700"></svg>
 
-    .toolTip {
-        position: absolute;
-        display: none;
-        min-width: 80px;
-        height: auto;
-        background: none repeat scroll 0 0 #ffffff;
-        border: 1px solid #6F257F;
-        padding: 14px;
-        text-align: center;
-    }
-</style>
-<svg width="960" height="700"></svg>
-<script src="https://d3js.org/d3.v4.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-annotation/2.3.1/d3-annotation.min.js"></script>
-<script>
 
-    var svg = d3.select("svg")
-    // smaller margin is the more height in texts 
-    var margin = 70;
-    var width = 120;
-    var height = 300;
+    <script>  //Script starts here 
 
-    var g = svg.append("g")
-        .attr("transform", "translate(" + margin + "," + margin + ")");
+        var svg = d3.select("svg")
+        // smaller margin is the more height in texts 
+        var margin = 70;
+        var width = 120;
+        var height = 300;
 
-    //tooltip 
-    var tooltip = d3.select("body").append("div").attr("class", "toolTip");
+        var g = svg.append("g")
+            .attr("transform", "translate(" + margin + "," + margin + ")");
 
-    d3.csv("csv/osaka.csv", function (error, data) {
-        // if (error) throw error;
-        // console.log(data);
-        data.forEach(d => {
-            d.population = +d.population * 1000;
+        //tooltip 
+        var tooltip = d3.select("body").append("div").attr("class", "toolTip");
+
+        d3.csv("csv/osaka.csv", function (error, data) {
+            data.forEach(d => {
+                d.population = +d.population * 1000;
+            });
+
+            var max = d3.max(data, function (d) { return d.population; });
+
+            var x = d3.scaleBand().rangeRound([0, width]).padding(0.1),
+                y = d3.scaleLinear().rangeRound([height, 0]);
+
+            x.domain(data.map(function (d) { return d.year; }));
+            y.domain([0, d3.max(data, function (d) { return d.population; })]);
+
+            //X Axis 
+            g.append("g")
+                .attr("transform", "translate(0," + height + ")")
+                .call(d3.axisBottom(x));
+            // .selectAll("text");
+            // .attr("x", 20);
+            // .attr("transform", "rotate(45)");
+
+            //Y Axis 
+            g.append("g")
+                .attr("transform", "translate(0, 0)")
+                .call(d3.axisLeft(y));
+            // .tickSize(-innerHeight);
+            //  .tickFormat(format('g'))
+
+
+            //bar chart
+            g.selectAll(".bar")
+                .data(data)
+                .enter().append("rect")
+                .attr("class", "bar")
+                .attr("x", function (d) { return x(d.year); })
+                .attr("y", function (d) { return y(d.population); })
+                .attr("width", x.bandwidth())
+                .attr("height", function (d) { return height - y(0); })
+                .attr("y", function (d) { return y(0); })
+                .on("mousemove", function (d) {
+                    tooltip
+                        .style("left", d3.event.pageX - 50 + "px")
+                        .style("top", d3.event.pageY - 70 + "px")
+                        .style("display", "inline-block")
+                        .html("Year :" + (d.year) + "<br>" + "Population : " + (d.population));
+                })
+                .on("mouseout", function (d) { tooltip.style("display", "none"); });
+
+
+
+            //Animation 
+            g.selectAll("rect")
+                .transition()
+                .duration(1000)
+                .attr("y", function (d) { return y(d.population); })
+                .attr("height", function (d) { return height - y(d.population); })
+                .delay(function (d, i) { console.log(i); return (i * 100) }); // end of animation 
+
+
+            const annotations = [
+                {
+                    note: {
+                        title: "Population ",
+                        label: "The population in Osaka seems to go down!"
+                    },
+                    x: 180,
+                    y: 80,
+                    dy: 100,
+                    dx: 100
+                }
+            ]
+            // Add annotation to the chart
+            const makeAnnotations = d3.annotation().annotations(annotations);
+            d3.select("svg")
+                .append("g")
+                .call(makeAnnotations)
+
+            g.append("text")
+                .attr("y", -20)
+                .text("The Population in Osaka from 2010 - 2020");
 
         });
 
-        var max = d3.max(data, function (d) { return d.population; });
-        // console.log("the max volume is:" + max)
-
-        var x = d3.scaleBand().rangeRound([0, width]).padding(0.1),
-            y = d3.scaleLinear().rangeRound([height, 0]);
-
-
-        x.domain(data.map(function (d) { return d.year; }));
-        y.domain([0, d3.max(data, function (d) { return d.population; })]);
-
-        const xValue = d => d.population;
-
-        //X Axis 
-        g.append("g")
-            .attr("transform", "translate(0," + height + ")")
-            .call(d3.axisBottom(x));
-        // .selectAll("text");
-        // .attr("x", 20);
-        // .attr("transform", "rotate(45)");
-
-        //Y Axis 
-        g.append("g")
-            .attr("transform", "translate(0, 0)")
-            .call(d3.axisLeft(y));
-        // .tickSize(-innerHeight);
-        //  .tickFormat(format('g'))
-
-
-        //bar chart
-        g.selectAll(".bar")
-            .data(data)
-            .enter().append("rect")
-            .attr("class", "bar")
-            .attr("x", function (d) { return x(d.year); })
-            .attr("y", function (d) { return y(d.population); })
-            .attr("width", x.bandwidth())
-            .attr("height", function (d) { return height - y(0); })
-            .attr("y", function (d) { return y(0); })
-            .on("mousemove", function (d) {
-                tooltip
-                    .style("left", d3.event.pageX - 50 + "px")
-                    .style("top", d3.event.pageY - 70 + "px")
-                    .style("display", "inline-block")
-                    .html("Year :" + (d.year) + "<br>" + "Population : " + (d.population));
-            })
-            .on("mouseout", function (d) { tooltip.style("display", "none"); });
-
-
-
-        //Animation 
-        g.selectAll("rect")
-            .transition()
-            .duration(1000)
-            .attr("y", function (d) { return y(d.population); })
-            .attr("height", function (d) { return height - y(d.population); })
-            .delay(function (d, i) { console.log(i); return (i * 100) }); // end of animation 
-
-
-        const annotations = [
-            {
-                note: {
-                    title: "Population ",
-                    label: "The population in Osaka seems to go down!"
-                },
-                x: 180,
-                y: 100,
-                dy: 100,
-                dx: 100
-            }
-        ]
-        // Add annotation to the chart
-        const makeAnnotations = d3.annotation().annotations(annotations);
-        d3.select("svg")
-            .append("g")
-            .call(makeAnnotations)
-
-        g.append("text")
-            .attr("y", -20)
-            .text("The Population in Osaka from 2010 - 2020");
-
-    });
-
-</script>
+    //End of Script
+    </script>
+</body>
 
 </html>
