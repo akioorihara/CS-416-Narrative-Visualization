@@ -60,9 +60,8 @@
     g.append("g")
       .attr("transform", "translate(0, 0)")
       .call(d3.axisLeft(y));
-      // .tickSize(-innerHeight);
+    // .tickSize(-innerHeight);
     //  .tickFormat(format('g'))
-
 
 
     //2020
@@ -73,7 +72,17 @@
       .attr("x", function (d) { return x(d.year); })
       .attr("y", function (d) { return y(d.population); })
       .attr("width", x.bandwidth())
-      .attr("height", function (d) { return height - y(d.population); });
+      .attr("height", function (d) { return height - y(0); })
+      .attr("y", function(d){return y(0);});
+
+    //Animation 
+    g.selectAll("rect")
+      .transition()
+      .duration(1000)
+      .attr("y", function (d) { return y(d.population); })
+      .attr("height", function (d) { return height - y(d.population); })
+      .delay(function (d, i) { console.log(i); return (i * 100) });
+
 
     const annotations = [
       {
@@ -93,11 +102,10 @@
       .append("g")
       .call(makeAnnotations)
 
-
-
     g.append("text")
       .attr("y", -20)
       .text("Tokyo Population from 2010 -2020");
+
   });
 
 </script>
