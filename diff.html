@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-annotation/2.3.1/d3-annotation.min.js"></script>
+
+</head>
+
+<body>
+    <nav class="navbar navbar-light bg-light">
+        <div class="container"></div>
+        <h1>Population in Japan Between 2010 to 2020 </h1>
+        </div>
+    </nav>
+    <div class="move">
+        <button type="button" onclick="window.location='index.html';">Home</button>
+        <button type="button" onclick="window.location='2010.html';">2010</button>
+        <button type="button" onclick="window.location='2015.html';">2015</button>
+        <button type="button" onclick="window.location='2020.html';">2020</button>
+        <button type="button" onclick="window.location='tokyo.html';">Tokyo</button>
+        <button type="button" onclick="window.location='osaka.html';">Osaka</button>
+        <button type="button" onclick="window.location='diff.html';">Difference</button>
+    </div>
+    <svg width="1200" height="700"></svg>
+
+
+    <script>
+
+        var svg = d3.select("svg")
+        // smaller margin is the more height in texts 
+        var margin = 100;
+        var width = 1200;
+        var height = 300;
+
+        var g = svg.append("g")
+            .attr("transform", "translate(" + margin + "," + margin + ")");
+
+        //tooltip 
+        var tooltip = d3.select("body").append("div").attr("class", "toolTip");
+
+
+
+        d3.csv("csv/diff.csv", function (error, data) {
+            // if (error) throw error;
+            // console.log(data);
+            data.forEach(function (d) {
+                d.Diff = + d.Diff;
+            });
+            // console.log(data);
+
+            var max = d3.max(data, function (d) { return d.Diff; });
+            // console.log("the max volume is:" + max)
+
+
+            // var x = d3.scale.ordinal()
+            // .rangeRoundBands([0, height], 0.1);
+            var x = d3.scaleBand().rangeRound([0, width]).padding(0.3);
+            // y = d3.scaleLinear().rangeRound([height, 0]);
+            var y = d3.scaleLinear().domain([0, d3.max(data)])
+                .range([height, 0]);
+
+            x.domain(data.map(function (d) { return d.Location; }));
+            y.domain([0, d3.max(data, function (d) { return d.Diff; })]);
+
+            //X Axis 
+            g.append("g")
+                .attr("transform", "translate(0," + height + ")")
+                .call(d3.axisBottom(x))
+                .selectAll("text")
+                .attr("x", 20)
+                .attr("transform", "rotate(45)");
+
+            //X axis Label
+            // g.append("text")
+            //     .attr("transform",
+            //         "translate(" + (width / 2) + " ," +
+            //         (height + margin - 55) + ")")
+            //     .style("text-anchor", "middle")
+            //     .text("Year");
+
+            //Y Axis 
+            // g.append("g")
+            //     .attr("transform", "translate(0, 0)")
+            //     .call(d3.axisLeft(d3.scaleLinear().domain([d3.min(data), d3.max(data)])
+            //         .range([height - y(d3.min(data)), 0])));
+            // .tickSize(-innerHeight);
+            //  .tickFormat(format('g'))
+
+
+
+
+            //Y axis Lebel
+            // svg.append("text")
+            //     .attr("transform", "rotate(-90)")
+            //     .attr("y", 0 - margin.left)
+            //     .attr("x", 0 - (height / 1.5))
+            //     .attr("dy", "1em")
+            //     .style("text-anchor", "middle")
+            //     .text("Populations");
+
+            //bar chart
+            // g.selectAll(".bar")
+            //     .data(data)
+            //     .enter().append("rect")
+            //     .attr("class", "bar")
+            //     .attr("x", function (d) { return x(d.Location); })
+            //     .attr("y", function (d, i) { return height - Map.max(0, y(d)); })
+            //     .attr("width", x.bandwidth())
+            //     .attr("height", function (d) { return Math.abs(y(d)); })
+            //     .attr("y", function (d) { return y(0); })
+            //     .on("mousemove", function (d) {
+            //         tooltip
+            //             .style("left", d3.event.pageX - 50 + "px")
+            //             .style("top", d3.event.pageY - 70 + "px")
+            //             .style("display", "inline-block")
+            //             .html("Year :" + (d.year) + "<br>" + "Population : " + (d.Location));
+            //     })
+            //     .on("mouseout", function (d) { tooltip.style("display", "none"); });
+
+
+
+            // //Animation 
+            // g.selectAll("rect")
+            //     .transition()
+            //     .duration(1000)
+            //     .attr("y", function (d) { return y(d.Diff); })
+            //     .attr("height", function (d) { return height - y(d.Diff); })
+            //     .delay(function (d, i) { return (i * 100) }); // end of animation 
+
+
+            // const annotations = [
+            //     {
+            //         note: {
+            //             title: "Max Population",
+            //             label: "The population in Tokyo seems to grow upwards"
+            //         },
+            //         x: 200,
+            //         y: 105,
+            //         dy: 100,
+            //         dx: 100
+            //     }
+            // ]
+            // // Add annotation to the chart
+            // const makeAnnotations = d3.annotation().annotations(annotations);
+            // d3.select("svg")
+            //     .append("g")
+            //     .call(makeAnnotations)
+
+            // g.append("text")
+            //     .attr("y", -20)
+            //     .text("Tokyo Population from 2010 -2020");
+
+
+
+
+
+
+
+
+
+            // Positive values
+            svg.append("g")
+                .attr("fill", color)
+                .selectAll("rect")
+                .data(data.map(d => d.Diff > 0 ? d : { value: 0 }))
+                .join("rect")
+                .attr("x", (d, i) => x(i))
+                .attr("y", d => y(d.Diff))
+                .attr("height", d => y(0) - y(d.Diff))
+                .attr("width", x.bandwidth());
+
+            svg.append("g")
+                .attr("fill", 'hsl(0, 80%, 60%)')  // red, but just not too bright
+                .selectAll("rect")
+                .data(data.map(d => d.value < 0 ? d : { value: 0 }))
+                .join("rect")
+                .attr("x", (d, i) => x(i))
+                .attr("y", d => y(0))
+                .attr("height", d => y(0) - y(-d.value))
+                .attr("width", x.bandwidth());
+        });
+
+    </script>
+    </head>
+
+    </html>
