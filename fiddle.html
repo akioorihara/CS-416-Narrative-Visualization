@@ -71,14 +71,30 @@
                 .attr("x", function (d, i) { return x(i); })
                 .attr("height", function (d) { return Math.abs(y(d.Diff) - y(0)); })
                 .attr("width", x.rangeBand())
+
                 .on("mousemove", function (d) {
+
                     tooltip
                         .style("left", d3.event.pageX - 50 + "px")
                         .style("top", d3.event.pageY - 70 + "px")
                         .style("display", "inline-block")
-                        .html("Location :" + (d.Location) + "<br>" + "Decreased by : " + (d.Diff *1000 + " people"));
+                    var valueToDisplay
+                    if (d.Diff >= 0) {
+                        tooltip
+                            .html("Location :" + (d.Location) + "<br>" + "Increased by " + (d.Diff * 1000 + " people"));
+                    }
+                    else {
+                        tooltip
+                            .html("Location :" + (d.Location) + "<br>" + "Decreased by " + (d.Diff * 1000 + " people"));
+                    }
+
                 })
+                // console.log(d.Diff);
+
                 .on("mouseout", function (d) { tooltip.style("display", "none"); });
+
+
+
 
 
             svg.append("g")
