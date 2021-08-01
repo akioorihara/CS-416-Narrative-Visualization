@@ -37,7 +37,7 @@ for i in range(len(y2020)):
     # print(diff15_20[i])
     z = diff10_15[i] + diff15_20[i]
     totalDiff.append(z) 
-    print(state[i][0])
+    print(totalDiff[i])
 
 # with open("diff.csv", "w") as diffFile:
 #     csvwrite = csv.writer(diffFile, delimiter = ",")

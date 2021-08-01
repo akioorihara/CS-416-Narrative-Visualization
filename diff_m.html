@@ -45,29 +45,43 @@
 
         d3.csv("csv/diff.csv", function (error, data) {
             // if (error) throw error;
-            // console.log(data);
+            console.log(data);
             data.forEach(function (d) {
                 d.Diff = + d.Diff;
             });
-            // console.log(data);
+            console.log(data);
 
             var max = d3.max(data, function (d) { return d.Diff; });
             // console.log("the max volume is:" + max)
 
-
+            
             // var x = d3.scale.ordinal()
             // .rangeRoundBands([0, height], 0.1);
             var x = d3.scaleBand().rangeRound([0, width]).padding(0.3);
             // y = d3.scaleLinear().rangeRound([height, 0]);
-            var y = d3.scaleLinear().domain([d3.min(data), d3.max(data)])
-                .range([0, height]);
+            var y = d3.scaleLinear().domain([0, d3.max(data)])
+                .range([height,0]);
+
+            // var y = d3.scaleLinear().domain([0, d3.max(data)])
+            // .range([0,height]);
+
+            console.log(d3.min(data));
+            // var yAxsis = 
+            // d3.scaleLinear().domain([d3.min(data), d3.max(data)])
+            //     .range([height - y(d3.min(data)), 0]);
+                
 
             x.domain(data.map(function (d) { return d.Location; }));
-            y.domain([0, d3.max(data, function (d) { return d.Diff; })]);
+
+            y.domain([d3.min(data, function (d) { return d.Diff; }), d3.max(data, function (d) { return d.Diff; })]);
+
+            var yAxsis = 
+            d3.scaleLinear().domain([d3.min(data, function (d) { return d.Diff; }), d3.max(data, function (d) { return d.Diff; })])
+                .range([height - y(d3.min(data)), 0]);
 
             //X Axis 
             g.append("g")
-                .attr("transform", "translate(0," + height + ")")
+                .attr("transform", "translate(0," + height /2+ ")")
                 .call(d3.axisBottom(x))
                 .selectAll("text")
                 .attr("x", 20)
@@ -100,8 +114,6 @@
             //bar chart
             g.selectAll(".bar")
                 .data(data)
-                .data(data.map(d => (d.Diff < 0 ? d : { Value: 0 })))
-                // .join("rect")
                 .enter().append("rect")
                 .attr("class", "bar")
                 .attr("x", function (d) { return x(d.Location); })
@@ -109,9 +121,6 @@
                 .attr("width", x.bandwidth())
                 .attr("height", function (d) { return height - y(0); })
                 .attr("y", function (d) { return y(0); })
-
-
-
                 .on("mousemove", function (d) {
                     tooltip
                         .style("left", d3.event.pageX - 50 + "px")
@@ -121,6 +130,19 @@
                 })
                 .on("mouseout", function (d) { tooltip.style("display", "none"); });
 
+            // g
+            // .selectAll("rect")
+            // .data(data)
+            // .enter()
+            // .append("rect")
+            // .attr("x", function (d, i) { return margin.left + i * barWidth; })
+            // .attr("y", function (d, i) { return chartHeight - Math.max(0, yScale(d)); })
+            // .attr("height", function (d) { return Math.abs(yScale(d)); })
+            // .attr("width", barWidth)
+            // .style("fill", "grey")
+            // .style("stroke", "black")
+            // .style("stroke-width", "1px")
+            // .style("opacity", function (d, i) { return 1 /*- (i * (1/data.length)); */ });
 
 
             //Animation 
