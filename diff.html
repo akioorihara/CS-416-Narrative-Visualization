@@ -54,13 +54,13 @@
             var max = d3.max(data, function (d) { return d.Diff; });
             // console.log("the max volume is:" + max)
 
-
+            
             // var x = d3.scale.ordinal()
             // .rangeRoundBands([0, height], 0.1);
             var x = d3.scaleBand().rangeRound([0, width]).padding(0.3);
             // y = d3.scaleLinear().rangeRound([height, 0]);
             var y = d3.scaleLinear().domain([0, d3.max(data)])
-                .range([height, 0]);
+                .range([height,0]);
 
             x.domain(data.map(function (d) { return d.Location; }));
             y.domain([0, d3.max(data, function (d) { return d.Diff; })]);
@@ -82,15 +82,11 @@
             //     .text("Year");
 
             //Y Axis 
-            // g.append("g")
-            //     .attr("transform", "translate(0, 0)")
-            //     .call(d3.axisLeft(d3.scaleLinear().domain([d3.min(data), d3.max(data)])
-            //         .range([height - y(d3.min(data)), 0])));
+            g.append("g")
+                .attr("transform", "translate(0, 0)")
+                .call(d3.axisLeft(y));
             // .tickSize(-innerHeight);
             //  .tickFormat(format('g'))
-
-
-
 
             //Y axis Lebel
             // svg.append("text")
@@ -102,85 +98,57 @@
             //     .text("Populations");
 
             //bar chart
-            // g.selectAll(".bar")
-            //     .data(data)
-            //     .enter().append("rect")
-            //     .attr("class", "bar")
-            //     .attr("x", function (d) { return x(d.Location); })
-            //     .attr("y", function (d, i) { return height - Map.max(0, y(d)); })
-            //     .attr("width", x.bandwidth())
-            //     .attr("height", function (d) { return Math.abs(y(d)); })
-            //     .attr("y", function (d) { return y(0); })
-            //     .on("mousemove", function (d) {
-            //         tooltip
-            //             .style("left", d3.event.pageX - 50 + "px")
-            //             .style("top", d3.event.pageY - 70 + "px")
-            //             .style("display", "inline-block")
-            //             .html("Year :" + (d.year) + "<br>" + "Population : " + (d.Location));
-            //     })
-            //     .on("mouseout", function (d) { tooltip.style("display", "none"); });
+            g.selectAll(".bar")
+                .data(data)
+                .enter().append("rect")
+                .attr("class", "bar")
+                .attr("x", function (d) { return x(d.Location); })
+                .attr("y", function (d) { return y(d.Diff); })
+                .attr("width", x.bandwidth())
+                .attr("height", function (d) { return height - y(0); })
+                .attr("y", function (d) { return y(0); })
+                .on("mousemove", function (d) {
+                    tooltip
+                        .style("left", d3.event.pageX - 50 + "px")
+                        .style("top", d3.event.pageY - 70 + "px")
+                        .style("display", "inline-block")
+                        .html("Year :" + (d.year) + "<br>" + "Population : " + (d.Location));
+                })
+                .on("mouseout", function (d) { tooltip.style("display", "none"); });
 
 
 
-            // //Animation 
-            // g.selectAll("rect")
-            //     .transition()
-            //     .duration(1000)
-            //     .attr("y", function (d) { return y(d.Diff); })
-            //     .attr("height", function (d) { return height - y(d.Diff); })
-            //     .delay(function (d, i) { return (i * 100) }); // end of animation 
+            //Animation 
+            g.selectAll("rect")
+                .transition()
+                .duration(1000)
+                .attr("y", function (d) { return y(d.Diff); })
+                .attr("height", function (d) { return height - y(d.Diff); })
+                .delay(function (d, i) { return (i * 100) }); // end of animation 
 
 
-            // const annotations = [
-            //     {
-            //         note: {
-            //             title: "Max Population",
-            //             label: "The population in Tokyo seems to grow upwards"
-            //         },
-            //         x: 200,
-            //         y: 105,
-            //         dy: 100,
-            //         dx: 100
-            //     }
-            // ]
-            // // Add annotation to the chart
-            // const makeAnnotations = d3.annotation().annotations(annotations);
-            // d3.select("svg")
-            //     .append("g")
-            //     .call(makeAnnotations)
+            const annotations = [
+                {
+                    note: {
+                        title: "Max Population",
+                        label: "The population in Tokyo seems to grow upwards"
+                    },
+                    x: 200,
+                    y: 105,
+                    dy: 100,
+                    dx: 100
+                }
+            ]
+            // Add annotation to the chart
+            const makeAnnotations = d3.annotation().annotations(annotations);
+            d3.select("svg")
+                .append("g")
+                .call(makeAnnotations)
 
-            // g.append("text")
-            //     .attr("y", -20)
-            //     .text("Tokyo Population from 2010 -2020");
+            g.append("text")
+                .attr("y", -20)
+                .text("Tokyo Population from 2010 -2020");
 
-
-
-
-
-
-
-
-
-            // Positive values
-            svg.append("g")
-                .attr("fill", color)
-                .selectAll("rect")
-                .data(data.map(d => d.Diff > 0 ? d : { value: 0 }))
-                .join("rect")
-                .attr("x", (d, i) => x(i))
-                .attr("y", d => y(d.Diff))
-                .attr("height", d => y(0) - y(d.Diff))
-                .attr("width", x.bandwidth());
-
-            svg.append("g")
-                .attr("fill", 'hsl(0, 80%, 60%)')  // red, but just not too bright
-                .selectAll("rect")
-                .data(data.map(d => d.value < 0 ? d : { value: 0 }))
-                .join("rect")
-                .attr("x", (d, i) => x(i))
-                .attr("y", d => y(0))
-                .attr("height", d => y(0) - y(-d.value))
-                .attr("width", x.bandwidth());
         });
 
     </script>
