@@ -12,7 +12,7 @@
 <body>
   <nav class="navbar navbar-light bg-light">
     <div class="container"></div>
-    <h1>Population in Tokyo Between 2010 to 2020 </h1>
+    <h1>Total Population in Japan in 2010 </h1>
     </div>
   </nav>
   <div class="move">
@@ -56,7 +56,7 @@
       });
 
       var max = d3.max(data, function (d) { return d.y2010; });
-      console.log("the max volume is:" + max)
+      // console.log("the max volume is:" + max)
 
       var x = d3.scaleBand().rangeRound([0, width]).padding(0.3),
         y = d3.scaleLinear().rangeRound([height, 0]);
@@ -76,7 +76,7 @@
         .attr("x", 20)
         .attr("transform", "rotate(45)");
 
-      console.log("we made it");
+      // console.log("we made it");
       //Y Axis 
       g.append("g")
         // .attr("class", "axis axis--y")
@@ -86,15 +86,15 @@
 
 
 
-      console.log("we made it, but not till bar");
-      g.selectAll(".bar")
-        .data(data)
-        .enter().append("rect")
-        .attr("class", "bar")
-        .attr("x", function (d) { return x(d.Location); })
-        .attr("y", function (d) { return y(d.y2010); })
-        .attr("width", x.bandwidth())
-        .attr("height", function (d) { return height - y(d.y2010); })
+      // console.log("we made it, but not till bar");
+      // g.selectAll(".bar")
+      //   .data(data)
+      //   .enter().append("rect")
+      //   .attr("class", "bar")
+      //   .attr("x", function (d) { return x(d.Location); })
+      //   .attr("y", function (d) { return y(d.y2010); })
+      //   .attr("width", x.bandwidth())
+      //   .attr("height", function (d) { return height - y(d.y2010); })
 
       //tooltip 
       var tooltip = d3.select("body").append("div").attr("class", "toolTip");

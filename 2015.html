@@ -11,7 +11,7 @@
 
 <nav class="navbar navbar-light bg-light">
   <div class="container"></div>
-  <h1>Populations in Osaka Between 2010 to 2020 </h1>
+  <h1>Total Population in Japan in 2015 </h1>
   </div>
 </nav>
 <div class="move">
@@ -19,10 +19,11 @@
   <button type="button" onclick="window.location='2010.html';">2010</button>
   <button type="button" onclick="window.location='2015.html';">2015</button>
   <button type="button" onclick="window.location='2020.html';">2020</button>
+  <button type="button" onclick="window.location='hokaido.html';">Hokaido</button>
   <button type="button" onclick="window.location='tokyo.html';">Tokyo</button>
   <button type="button" onclick="window.location='osaka.html';">Osaka</button>
   <button type="button" onclick="window.location='diff.html';">Changes by State</button>
-  <button type="button" onclick="window.location='total.html';">Total Diff</button>
+  <button type="button" onclick="window.location='total.html';">Total Difference</button>
 </div>
 <h4>
   This demonstrates the population changes by Prefecture (State).
@@ -48,7 +49,7 @@
 
 
     data.forEach(function (d) {
-      d.y201 = + d.y2015;
+      d.y2015 = + d.y2015;
       // console.log(d.y2015);
     });
 
@@ -78,7 +79,7 @@
       .attr("x", 20)
       .attr("transform", "rotate(45)");
 
-    console.log("we made it");
+    // console.log("we made it");
     //Y Axis 
     g.append("g")
       // .attr("class", "axis axis--y")

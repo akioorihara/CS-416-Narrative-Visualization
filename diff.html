@@ -21,10 +21,11 @@
         <button type="button" onclick="window.location='2010.html';">2010</button>
         <button type="button" onclick="window.location='2015.html';">2015</button>
         <button type="button" onclick="window.location='2020.html';">2020</button>
+        <button type="button" onclick="window.location='hokaido.html';">Hokaido</button>
         <button type="button" onclick="window.location='tokyo.html';">Tokyo</button>
         <button type="button" onclick="window.location='osaka.html';">Osaka</button>
         <button type="button" onclick="window.location='diff.html';">Changes by State</button>
-        <button type="button" onclick="window.location='total.html';">Total Diff</button>
+        <button type="button" onclick="window.location='total.html';">Total Difference</button>
     </div>
     <h4>
         This demonstrates the population changes by Prefecture (State).
@@ -131,58 +132,7 @@
             // ]
             // Add annotation to the chart
 
-            var annotations = [
-                {
-                    "cx": 625,
-                    "cy": 111,
-                    "r": 109,
-                    "text": "The longer Old Faithful lays dormant, the longer the eruption last",
-                    "textWidth": 140,
-                    "textOffset": [
-                        121,
-                        186
-                    ]
-                }
-            ];
-
-
-            // d3.ringNote = function () {
-            //     // var draggable = false,
-            //     controlRadius = 15;
-            // }
-            var ringNote = d3.ringNote();
-                // .draggable(true);
-            var xScale = d3.scale.linear().range([0, width]),
-                yScale = d3.scale.linear().range([height, 0]);
-
-            var xValue = function (d) { return xScale(x(d)); },
-                yValue = function (d) { return yScale(y(d)); };
-
-            var xAxis = d3.svg.axis().scale(xScale).orient("bottom"),
-                yAxis = d3.svg.axis().scale(yScale).orient("left");
-
-            svg.append("g")
-                .attr("class", "y axis")
-                .call(yAxis)
-                .append("text")
-                .attr("class", "label")
-                .attr("transform", "rotate(-90)")
-                .attr("y", 6)
-                .attr("dy", ".71em")
-                .style("text-anchor", "end")
-                .text("Eruption Duration (minutes)");
-
-            svg.selectAll(".dot")
-                .data(data)
-                .enter().append("circle")
-                .attr("class", "dot")
-                .attr("r", 3)
-                .attr("cx", xValue)
-                .attr("cy", yValue);
-
-            svg.append("g")
-                .attr("class", "annotations")
-                .call(ringNote, annotations);
+        
 
 
 
