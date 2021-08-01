@@ -1,112 +1,149 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
-<style>
-  .bar {
-    fill: steelblue;
-  }
 
-  .bar:hover {
-    fill: brown;
-  }
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-annotation/2.3.1/d3-annotation.min.js"></script>
 
-  .axis--x path {
-    display: none;
-  }
-</style>
-<svg width="960" height="700"></svg>
-<script src="https://d3js.org/d3.v4.min.js"></script>
-<script>
+</head>
 
-  var svg = d3.select("svg"),
-    // smaller margin is the more height in texts 
-    margin = { top: 20, right: 20, bottom: 100, left: 40 },
-    width = +svg.attr("width") - margin.left - margin.right,
-    height = +svg.attr("height") - margin.top - margin.bottom;
+<body>
+  <nav class="navbar navbar-light bg-light">
+    <div class="container"></div>
+    <h1>Populations in Osaka Between 2010 to 2020 </h1>
+    </div>
+  </nav>
+  <div class="move">
+    <button type="button" onclick="window.location='index.html';">Home</button>
+    <button type="button" onclick="window.location='2010.html';">2010</button>
+    <button type="button" onclick="window.location='2015.html';">2015</button>
+    <button type="button" onclick="window.location='2020.html';">2020</button>
+    <button type="button" onclick="window.location='tokyo.html';">Tokyo</button>
+    <button type="button" onclick="window.location='osaka.html';">Osaka</button>
+    <button type="button" onclick="window.location='diff.html';">Changes by State</button>
+    <button type="button" onclick="window.location='total.html';">Total Diff</button>
+  </div>
+  <h4>
+    This demonstrates the population changes by Prefecture (State).
+  </h4>
+
+  <svg width="960" height="700"></svg>
+
+  <script>
+
+    var svg = d3.select("svg"),
+      // smaller margin is the more height in texts 
+      margin = { top: 20, right: 20, bottom: 100, left: 40 },
+      width = +svg.attr("width") - margin.left - margin.right,
+      height = +svg.attr("height") - margin.top - margin.bottom;
+
+
+    //tooltip 
+    var tooltip = d3.select("body").append("div").attr("class", "toolTip");
 
 
 
-  var g = svg.append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    var g = svg.append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-  d3.csv("csv/pop.csv", function (error, data) {
-    if (error) throw error;
+    d3.csv("csv/pop.csv", function (error, data) {
+      if (error) throw error;
 
-    // data.forEach(function (x) {
-    //   if (x[Location] == "Tokyo")
-    //   console.log(x.y2020);
-    // });
+      // data.forEach(function (x) {
+      //   if (x[Location] == "Tokyo")
+      //   console.log(x.y2020);
+      // });
 
-    data.forEach(function (d) {
-      if (d[Location] = "Tokyo") {
-        d.y2020 = + d.y2020;
-        // console.log("Yes Tokyo is here");
-      }
+      data.forEach(function (d) {
+        if (d[Location] = "Tokyo") {
+          d.y2020 = + d.y2020;
+          // console.log("Yes Tokyo is here");
+        }
+      });
+
+
+      var max = d3.max(data, function (d) { return d.y2020; });
+      // console.log("the max volume is:" + max)
+
+      var x = d3.scaleBand().rangeRound([0, width]).padding(0.3),
+        y = d3.scaleLinear().rangeRound([height, 0]);
+
+      x.domain(data.map(function (d) { return d.Location; }));
+      y.domain([0, d3.max(data, function (d) { return d.y2020; })]);
+
+
+
+      //X Axis 
+      g.append("g")
+        .attr("class", "axis axis--x")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x))
+        .selectAll("text")
+        .attr("x", 20)
+        .attr("transform", "rotate(45)");
+
+      //Y Axis 
+      g.append("g")
+        .attr("transform", "translate(0, 0)")
+        .call(d3.axisLeft(y))
+
+
+      // g.selectAll(".bar")
+      g.selectAll(".bar")
+        .data(data)
+        .enter().append("rect")
+        .attr("class", "bar")
+        // .attr("x", function (d) { return x(d.Location); })
+        .attr("x", function (d) { return x(d.Location); })
+        // .attr("y", function (d) { return y(d.y2020); })
+        .attr("y", function (d) { return y(d.y2020); })
+        .attr("width", x.bandwidth())
+        .attr("height", function (d) { return height - y(d.y2020); })
+
+        .on("mousemove", function (d) {
+          tooltip
+            .style("left", d3.event.pageX - 50 + "px")
+            .style("top", d3.event.pageY - 70 + "px")
+            .style("display", "inline-block")
+            .html("Location : " + (d.Location) +" Prefecture"+ "<br>" + "Population : " + (d.y2020 *1000));
+        })
+        .on("mouseout", function (d) { tooltip.style("display", "none"); });
+
+
+
+      // g.selectAll("rect")
+      //   .transition()
+      //   .duration(2000)
+      //   .attr("y", function (d) { return y(d.y2020); })
+      //   .attr("height", function (d) { return height - y(d.y2020); })
+      //   .delay(function (d, i) { console.log(i); return (i * 100) }); // end of animation 
+
+      //Mouse over 
+      // function onMouseOver(d, i) {
+      //   // d3.select(this).attr('class', 'highlight');
+      //   d3.select(".bar")
+      //     .transition()
+      //     .duration(100)
+      //     .attr('width', x.bandwidth() + 5)
+      //     .attr("y", function (d) {
+      //       return y(d.y2020) - 10;
+      //     })
+      //     .attr("height", function (d) {
+      //       return height - y(d.y2020) + 10;
+      //     });
+
+      //   svg1.append('text')
+      //     .attr('id', 'val' + i)
+      //     .attr('x', x(d.y2020) + 80)
+      //     .attr('y', y(d.y2020) + 80)
+      //     .text(d.y2020);
+      // }
+
+
     });
 
-
-    var max = d3.max(data, function (d) { return d.y2020; });
-    // console.log("the max volume is:" + max)
-
-    var x = d3.scaleBand().rangeRound([0, width]).padding(0.3),
-      y = d3.scaleLinear().rangeRound([height, 0]);
-
-    x.domain(data.map(function (d) { return d.Location; }));
-    y.domain([0, d3.max(data, function (d) { return d.y2020; })]);
-
-
-
-    //X Axis 
-    g.append("g")
-      .attr("class", "axis axis--x")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x))
-      .selectAll("text")
-      .attr("x", 20)
-      .attr("transform", "rotate(45)");
-
-    //Y Axis 
-    g.append("g")
-      .attr("transform", "translate(0, 0)")
-      .call(d3.axisLeft(y))
-
-
-    // g.selectAll(".bar")
-    g.selectAll(".bar")
-      .data(data)
-      .enter().append("rect")
-      .attr("class", "bar")
-      // .attr("x", function (d) { return x(d.Location); })
-      .attr("x", function (d) { return x(d.Location); })
-      // .attr("y", function (d) { return y(d.y2020); })
-      .attr("y", function (d) { return y(d.y2020); })
-      .attr("width", x.bandwidth())
-      .attr("height", function (d) { return height - y(d.y2020); });
-
-
-    //Mouse over 
-    // function onMouseOver(d, i) {
-    //   // d3.select(this).attr('class', 'highlight');
-    //   d3.select(".bar")
-    //     .transition()
-    //     .duration(100)
-    //     .attr('width', x.bandwidth() + 5)
-    //     .attr("y", function (d) {
-    //       return y(d.y2020) - 10;
-    //     })
-    //     .attr("height", function (d) {
-    //       return height - y(d.y2020) + 10;
-    //     });
-
-    //   svg1.append('text')
-    //     .attr('id', 'val' + i)
-    //     .attr('x', x(d.y2020) + 80)
-    //     .attr('y', y(d.y2020) + 80)
-    //     .text(d.y2020);
-    // }
-
-
-  });
-
-</script>
+  </script>
+</body>
 
 </html>

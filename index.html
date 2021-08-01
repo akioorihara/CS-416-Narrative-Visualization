@@ -1,41 +1,35 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-annotation/2.3.1/d3-annotation.min.js"></script>
+
+</head>
+
 <body>
-
-  <p>
-    <a href="bar.html">Bar chart</a>
-  </p>
-  
-  <script src="https://d3js.org/d3.v2.min.js?2.10.0"></script>
-  <script>
-    var width = 960,
-    height = 700;
-
-    var svg = d3.select("body").append("svg")
-    .attr("width", width)
-    .attr("height", height);
-
-    var xym = d3.geo.albers();
-    var path = d3.geo.path().projection(xym);
-
-    xym.origin([134, 25])
-    xym.translate([350, 745])
-    xym.parallels([24.6, 43.6])
-    xym.scale(1980)
-
-    d3.json("japan.json", function(data) {
-        svg.selectAll("path").data(data.features)
-        .enter().append("path")
-        .attr("d", path)
-        .style("fill", function() { return "#44aaee" })
-        .on("mouseover", function(e){d3.select(this).style("fill", "#5522aa")})
-        .on("mouseout", function(e){d3.select(this).style("fill", "#44aaee")})
-        
-    });
-
- 
-      
-  </script>
-
+    <nav class="navbar navbar-light bg-light">
+        <div class="container"></div>
+        <h1>Population in Tokyo Between 2010 to 2020 </h1>
+        </div>
+    </nav>
+    <div class="move">
+        <button type="button" onclick="window.location='index.html';">Home</button>
+        <button type="button" onclick="window.location='2010.html';">2010</button>
+        <button type="button" onclick="window.location='2015.html';">2015</button>
+        <button type="button" onclick="window.location='2020.html';">2020</button>
+        <button type="button" onclick="window.location='hokaido.html';">Hokaido</button>
+        <button type="button" onclick="window.location='tokyo.html';">Tokyo</button>
+        <button type="button" onclick="window.location='osaka.html';">Osaka</button>
+        <button type="button" onclick="window.location='diff.html';">Changes by State</button>
+        <button type="button" onclick="window.location='total.html';">Total Difference</button>
+    </div>
+    <h4>
+        This graph shows popluations in Tokyo, Japan has grown over time even though
+        the total popluations in Japan has gone down.
+    </h4>
 </body>
+
 </html>
