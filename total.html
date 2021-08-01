@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<meta charset="utf-8">
 
 <head>
     <meta charset="utf-8">
@@ -11,7 +12,7 @@
 <body>
     <nav class="navbar navbar-light bg-light">
         <div class="container"></div>
-        <h1>Population in Osaka Between 2010 to 2020 </h1>
+        <h1>Total Population in Japan Between 2010 to 2020 </h1>
         </div>
     </nav>
     <div class="move">
@@ -22,21 +23,19 @@
         <button type="button" onclick="window.location='hokaido.html';">Hokaido</button>
         <button type="button" onclick="window.location='tokyo.html';">Tokyo</button>
         <button type="button" onclick="window.location='osaka.html';">Osaka</button>
-        <button type="button" onclick="window.location='diff.html';">Changes by State</button>
+        <button type="button" onclick="window.location='diff.html';">Change by State</button>
         <button type="button" onclick="window.location='total.html';">Total Difference</button>
     </div>
     <h4>
-        This graph shows the total population in Osaka, Japan.
-        It has been slightly going down over time. <br>
-        This is surprising since Osaka is the second-largest city in Japan. <br>
-        As you review Tokyo's population, it has gone up in past years,
-        so I expect to have population upwards.   
+        This graph demonstrates the total population declined in Japan. I expected to see all states and <br>
+        prefectures decline their populations. <br>However, as you see the "Change by State" page, 
+        there are a handful of states/prefectures increased their populations since 2010.    
         
     </h4>
     <svg width="960" height="700"></svg>
 
 
-    <script>  //Script starts here 
+    <script>
 
         var svg = d3.select("svg")
         // smaller margin is the more height in texts 
@@ -50,18 +49,26 @@
         //tooltip 
         var tooltip = d3.select("body").append("div").attr("class", "toolTip");
 
-        d3.csv("csv/osaka.csv", function (error, data) {
+
+
+        d3.csv("csv/total.csv", function (error, data) {
+            // if (error) throw error;
+            // console.log(data);
             data.forEach(d => {
                 d.population = +d.population * 1000;
-            });
 
+            });
             var max = d3.max(data, function (d) { return d.population; });
+            // console.log("the max volume is:" + max)
 
             var x = d3.scaleBand().rangeRound([0, width]).padding(0.1),
                 y = d3.scaleLinear().rangeRound([height, 0]);
 
+
+
             x.domain(data.map(function (d) { return d.year; }));
             y.domain([0, d3.max(data, function (d) { return d.population; })]);
+
 
             //X Axis 
             g.append("g")
@@ -70,13 +77,14 @@
             // .selectAll("text");
             // .attr("x", 20);
             // .attr("transform", "rotate(45)");
+
+            //X axis Label
             g.append("text")
                 .attr("transform",
                     "translate(" + (width / 2) + " ," +
                     (height + margin - 55) + ")")
                 .style("text-anchor", "middle")
                 .text("Year");
-
 
             //Y Axis 
             g.append("g")
@@ -92,8 +100,7 @@
                 .attr("x", 0 - (height / 1.5))
                 .attr("dy", "1em")
                 .style("text-anchor", "middle")
-                .text("Population");
-
+                .text("Populations");
 
             //bar chart
             g.selectAll(".bar")
@@ -128,11 +135,11 @@
             const annotations = [
                 {
                     note: {
-                        title: "Slightly decreased over time"
-                        
+                        title: "Population Shrinking",
+                        label: "The total population seems to decrease"
                     },
                     x: 200,
-                    y: 115,
+                    y: 105,
                     dy: 100,
                     dx: 100
                 }
@@ -143,14 +150,9 @@
                 .append("g")
                 .call(makeAnnotations)
 
-            g.append("text")
-                .attr("y", -20)
-                .text("The Population in Osaka from 2010 - 2020");
-
         });
 
-    //End of Script
     </script>
-</body>
+    </head>
 
-</html>
+    </html>

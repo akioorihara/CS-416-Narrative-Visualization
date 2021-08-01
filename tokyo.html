@@ -12,7 +12,7 @@
 <body>
   <nav class="navbar navbar-light bg-light">
     <div class="container"></div>
-    <h1>Populations in Tokyo Between 2010 to 2020 </h1>
+    <h1>Population in Tokyo Between 2010 to 2020 </h1>
     </div>
   </nav>
   <div class="move">
@@ -20,10 +20,16 @@
     <button type="button" onclick="window.location='2010.html';">2010</button>
     <button type="button" onclick="window.location='2015.html';">2015</button>
     <button type="button" onclick="window.location='2020.html';">2020</button>
+    <button type="button" onclick="window.location='hokaido.html';">Hokaido</button>
     <button type="button" onclick="window.location='tokyo.html';">Tokyo</button>
     <button type="button" onclick="window.location='osaka.html';">Osaka</button>
-    <button type="button" onclick="window.location='diff.html';">Difference</button>
+    <button type="button" onclick="window.location='diff.html';">Changes by State</button>
+    <button type="button" onclick="window.location='total.html';">Total Difference</button>
   </div>
+  <h4>
+    This graph shows popluations in Tokyo, Japan has grown over time even though 
+    the total popluations in Japan has gone down. 
+  </h4>
   <svg width="960" height="700"></svg>
 
 
@@ -44,8 +50,6 @@
 
 
     d3.csv("csv/tokyo.csv", function (error, data) {
-      // if (error) throw error;
-      // console.log(data);
       data.forEach(d => {
         d.population = +d.population * 1000;
 
@@ -62,8 +66,6 @@
       x.domain(data.map(function (d) { return d.year; }));
       y.domain([0, d3.max(data, function (d) { return d.population; })]);
 
-
-      const xValue = d => d.population;
 
       //X Axis 
       g.append("g")
@@ -91,7 +93,7 @@
       //Y axis Lebel
       svg.append("text")
         .attr("transform", "rotate(-90)")
-        .attr("y", 0 - margin.left)
+        .attr("y", 0 - 1)
         .attr("x", 0 - (height / 1.5))
         .attr("dy", "1em")
         .style("text-anchor", "middle")
@@ -130,7 +132,7 @@
       const annotations = [
         {
           note: {
-            title: "Max Population",
+            title: "Population Growth",
             label: "The population in Tokyo seems to grow upwards"
           },
           x: 200,
