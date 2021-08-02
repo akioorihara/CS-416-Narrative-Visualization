@@ -3,7 +3,7 @@
 
 <head>
     <script src="https://d3js.org/d3.v3.min.js"></script>
-    <!-- <script src="https://d3js.org/d3.v4.js"></script> -->
+    <script src="https://d3js.org/d3.v4.js"></script>
     <link rel="stylesheet" href="style.css">
     <script src="d3-ring-note.js"></script>
 
@@ -108,10 +108,11 @@
                 .on("mouseout", function (d) { tooltip.style("display", "none"); });
 
 
+            // console.log(yAxis)
+            // svg.append("g")
+            //     .attr("class", "x axis");
+            //     .call(yAxis);
 
-            svg.append("g")
-                .attr("class", "x axis")
-                .call(yAxis);
 
             svg.append("g")
                 .attr("class", "y axis")
@@ -120,6 +121,42 @@
                 .attr("y2", y(0))
                 .attr("x1", 0)
                 .attr("x2", width);
+
+
+
+            // const annotations = [
+            //     {
+            //         note: {
+            //             title: "Max Population",
+            //             label: "The population in Tokyo seems to grow upwards"
+            //         },
+            //         x: 200,
+            //         y: 105,
+            //         dy: 100,
+            //         dx: 100
+            //     }
+            // ]
+            // // Add annotation to the chart
+            // const makeAnnotations = d3.annotation().annotations(annotations);
+            // d3.select("svg")
+            //     .append("g")
+            //     .call(makeAnnotations)
+
+
+            // var tokyoX = d3.scale.linear().range([0, 13]);
+            // var tokyoY = d3.scale.linear().range([762, 0]);
+            // var line = d3.svg.line()
+            //     .x(function (d) { return x(d.tokyoX); })
+            //     .y(function (d) { return y(d.tokyoY); });
+
+            // svg.append('line')
+            //     .style("stroke", "red")
+            //     .style("stroke-width", 3)
+            //     .attr("x1", 269)
+            //     .attr("y1", 10)
+            //     .attr("x2", 400)
+            //     .attr("y2", 175);
+
 
 
             var mytext = svg.append("text")
@@ -136,22 +173,6 @@
                 .attr("r", 60)
                 .style("stroke", "red")
                 .style("fill", "none");
-
-            // const annotations = [
-            //     {
-            //         note: {
-            //             title: "Max Population",
-            //             label: "The population in Tokyo seems to grow upwards"
-            //         },
-            //         x: 200,
-            //         y: 105,
-            //         dy: 100,
-            //         dx: 100
-            //     }
-            // ]
-            // Add annotation to the chart
-
-
 
 
 
