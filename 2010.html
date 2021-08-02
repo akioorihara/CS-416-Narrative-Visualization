@@ -25,11 +25,12 @@
     <button type="button" onclick="window.location='tokyo.html';">Tokyo</button>
     <button type="button" onclick="window.location='osaka.html';">Osaka</button>
     <button type="button" onclick="window.location='diff.html';">Changes by States</button>
-    
+
   </div>
   <h4>
-    This graph shows total popluation in Japan by state in 2010. If you hover over your mouse, you will see the detailed numbers of population by state. <br> 
-    If you would like to review the population in 2015, please click "2015" to move the next page.  
+    This graph shows total popluation in Japan by state in 2010. If you hover over your mouse, you will see the detailed
+    numbers of population by state. <br>
+    If you would like to review the population in 2015, please click "2015" to move the next page.
   </h4>
 
 
@@ -117,6 +118,34 @@
             .html("Location : " + (d.Location) + " Prefecture" + "<br>" + "Population : " + (d.y2010 * 1000));
         })
         .on("mouseout", function (d) { tooltip.style("display", "none"); });
+
+
+      const annotations = [
+        {
+          note: {
+            title: "Neighboring prefectures of Tokyo"
+
+          },
+          type: d3.annotationCalloutCircle,
+          subject: {
+            radius: 70,         // circle radius
+            radiusPadding: 20   // white space around circle befor connector
+          },
+          color: ["red"],
+          x: 280,
+          y: 275,
+          dy: 100,
+          dx: 100
+        }
+      ]
+      // Add annotation to the chart
+      const makeAnnotations = d3.annotation().annotations(annotations);
+      d3.select("svg")
+        .append("g")
+        .call(makeAnnotations)
+
+
+
 
     });
 

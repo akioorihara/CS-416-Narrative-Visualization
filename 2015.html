@@ -116,6 +116,30 @@
       })
       .on("mouseout", function (d) { tooltip.style("display", "none"); });
 
+      const annotations = [
+        {
+          note: {
+            title: "Larger declines for these areas"
+
+          },
+          type: d3.annotationCalloutCircle,
+          subject: {
+            radius: 60,         // circle radius
+            radiusPadding: 20   // white space around circle befor connector
+          },
+          color: ["red"],
+          x: 177,
+          y: 505,
+          dy: -100,
+          dx:650
+        }
+      ]
+      // Add annotation to the chart
+      const makeAnnotations = d3.annotation().annotations(annotations);
+      d3.select("svg")
+        .append("g")
+        .call(makeAnnotations)
+
   });
 
 </script>
